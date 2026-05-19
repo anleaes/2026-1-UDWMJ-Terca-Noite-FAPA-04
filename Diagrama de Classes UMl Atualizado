@@ -1,0 +1,128 @@
+@startuml SistemaLeilao
+
+
+class Category{
+ -name: Char
+ -description: Text
+ -status: Boolean
+ +toString()
+}
+
+
+class Item{
+ -name: Char
+ -description: Text
+ -state: CharChoices
+ -price: Float
+ -photo: Image
+ -category: ForeignKey[Category]
+ +toString()
+}
+
+
+class User{
+ -id: Char
+ -balance: Float
+ -reputation: Float
+ -gender: CharChoices
+ +toString()
+}
+
+
+class Auctioneer{
+ -company: Char
+ -evaluation: Float
+ -commission: Float
+ -status: Boolean
+ +toString()
+}
+
+class ContactChannel{
+ -name: Char
+ -content_type: Tex
+ -preferential_contact: Char
+ +toString()
+}
+
+class Person{
+ -name: Char
+ -email: Email
+ -password: Char
+ -phone: Char
+ -date_sign: DateTime
+ +toString()
+}
+
+class Auction{
+ -title: Char
+ -description: Text
+ -date_begin: DateTime
+ -date_end: DateTime
+ -status: CharChoices
+ -initial_value: Float
+ -iten: ForeignKey[Iten]
+ -auctioneer: ForeignKey[Auctioneer]
+ +toString()
+}
+
+class AuctionItem{
+ -quant: Int
+ -value: Float
+ -sub_total: Float
+ -iten: ForeignKey[Iten]
+ -auction: ForeignKey[Auction]
+ +toString()
+}
+
+
+class AuctionBid{
+ -value: Decimal
+ -status: CharChoices
+ -user: ForeignKey[User]
+ -auctioniten: ForeignKey[AuctionIten]
+ +toString()
+ +end_bid()
+}
+
+
+class Payment{
+ -total: Float
+ -payment_mode: CharChoices
+ -status: CharChoices
+ -data_payment: DateTime
+ -user: ForeignKey[User]
+ +toString()
+}
+
+class ReceiptPayment{
+ -number: Char
+ -issue_date: Date
+ -Payment: OneToOne[Payment]
+ +toString()
+}
+
+class Notification{
+ -title: Char
+ -mesage: Text
+ -type: CharChoices
+ -date_sent: DateTime
+ -user: ForeignKey[User]
+ +toString()
+}
+
+Item <--* Category : 1..n
+Item *--> AuctionItem : 1..n
+Auction *--> AuctionItem : 1..n
+Auction *--> AuctionBid : 1..n
+User *--> AuctionBid : 1..n
+User *--> Auction : n..n
+AuctionBid *--> Payment : 1..n
+Payment *--> ReceiptPayment : 1..1
+Auctioneer *--> Auction : 1..n
+ContactChannel *--> User : 1..n
+User *--> Notification : 0..n
+User -up-|> Person : 1..1
+Auctioneer -up-|> Person : 1..1
+
+
+@enduml
