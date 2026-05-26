@@ -1,0 +1,45 @@
+{% extends 'base.html' %} {% block title %} Lista de Categorias - {{ block.super
+}} {% endblock %} {% block body %}
+
+<h2>Lista de Categorias</h2>
+
+<br />
+<a href="{% url 'categories:add_category' %}">Nova Categoria</a>
+<br />
+<br />
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>#</th>
+      <th>Nome</th>
+      <th>Descrição</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for category in categories %}
+    <tr>
+      <td>{{ forloop.counter }}</td>
+      <td>{{ category.id }}</td>
+      <td>{{ category.name }}</td>
+      <td>{{ category.description }}</td>
+      <td>
+        <a href="{% url 'categories:edit_category' category.id %}"> Editar </a>
+      </td>
+      <td>
+        <a
+          href="{% url 'categories:delete_category' category.id %}"
+          onclick="return confirmarExclusao();"
+        >
+          Excluir
+        </a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
