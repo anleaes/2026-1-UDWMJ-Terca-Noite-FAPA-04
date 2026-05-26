@@ -1,2 +1,4 @@
 /apps/core/__pycache__/*
 /apps/core/migrations/*
+/apps/category/__pycache__/*
+/apps/category/migrations/*
