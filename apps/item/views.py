@@ -24,3 +24,21 @@ def list_items(request):
         'items': items
     }
     return render(request, template_name, context) 
+
+def edit_item(request, id_item):
+    template_name = 'item/add_item.html'
+    context ={}
+    item = get_object_or_404(Item, id=id_item)
+    if request.method == 'POST':
+        form = ItemForm(request.POST, request.FILES,  instance=item)
+        if form.is_valid():
+            form.save()
+            return redirect('item:list_items')
+    form = ItemForm(instance=item)
+    context['form'] = form
+    return render(request, template_name, context)
+
+def delete_item(request, id_item):
+    item = Item.objects.get(id=id_item)
+    item.delete()
+    return redirect('item:list_items')
