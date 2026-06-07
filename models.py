@@ -15,3 +15,6 @@ class Item(models.Model):
         verbose_name = 'item'      
         verbose_name_plural = 'itens'
         ordering =['id'] 
+
+    def __str__(self):
+        return self.name 
