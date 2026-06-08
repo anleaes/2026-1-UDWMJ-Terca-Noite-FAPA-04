@@ -1,0 +1,82 @@
+{% extends 'base.html' %} {% block title %} Lista de Usuários - {{ block.super
+}} {% endblock title %} {% block body %}
+
+<div class="page-container">
+  <h2>Lista de Usuários</h2>
+
+  <div style="margin-bottom: 20px">
+    <a class="btn" href="{% url 'user:add_user' %}">Cadastro de novo usuário</a>
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Sobrenome</th>
+        <th>Reputação</th>
+        <th>Saldo</th>
+        <th>E-mail</th>
+        <th>Genero</th>
+        <th>Canais de Contato</th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for user in users %}
+
+      <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.first_name }}</td>
+        <td>{{ user.last_name }}</td>
+        <td>{{ user.reputation }}</td>
+        <td>{{ user.balance }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.gender }}</td>
+
+        <td>
+          <ul>
+            {% for contactchannel in user.contactchannel.all %}
+
+            <li>{{ contactchannel.name }}</li>
+
+            {% empty %}
+
+            <li>Sem canais</li>
+
+            {% endfor %}
+          </ul>
+        </td>
+
+        <td>
+          <a class="btn-edit" href="{% url 'user:edit_user' user.id %}">
+            Editar
+          </a>
+        </td>
+
+        <td>
+          <a
+            class="btn-delete"
+            href="{% url 'user:delete_user' user.id %}"
+            onclick="return confirmarExclusao();"
+          >
+            Excluir
+          </a>
+        </td>
+
+        <td>
+          <a class="btn" href="{% url 'user:view_user' user.id %}">
+            Visualizar
+          </a>
+        </td>
+      </tr>
+
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% endblock body %}
+</div>
