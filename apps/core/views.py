@@ -22,4 +22,4 @@ def home(request):
             'items': items
         }
 
-    
+    )
