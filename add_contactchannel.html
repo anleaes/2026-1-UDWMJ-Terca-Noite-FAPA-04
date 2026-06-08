@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}
+
+    Adicionar Canal de Contato - {{ block.super }}
+
+{% endblock title %}
+
+{% block body %}
+
+<div class="form-container">
+
+<h2>Cadastro de Canal de Contato</h2>
+
+<form action="" method="POST" class="form-card">
+    {% csrf_token %}
+
+    <div class="form-group">
+    <label>Nome</label>
+    {{ form.name }}
+    </div>
+
+    <div class="form-group">
+    <label>Tipo de conteudo</label>
+    {{ form.content_type}}
+    </div>
+
+    <div class="form-group">
+    <label>Contato Preferêncial</label>
+    {{ form.url}}
+    </div>
+
+    <button type="submit" class="btn">Salvar</button>       
+</form>
+</div>
+
+{% endblock body %}
+
