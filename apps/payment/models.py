@@ -30,3 +30,19 @@ class Payment(models.Model):
 
     def __str__(self):
         return f'Pagamento {self.id}'
+        
+
+class PaymentMethod(models.Model):
+    name = models.CharField('Nome', max_length=80)
+    method = models.CharField('Tipo', max_length=1, choices=PAYMENT_METHOD_CHOICES)
+    description = models.CharField('Descrição', max_length=120, blank=True)
+    is_active = models.BooleanField('Ativo', default=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='payment_methods')
+
+    class Meta:
+        verbose_name = 'Método de pagamento'
+        verbose_name_plural = 'Métodos de pagamento'
+        ordering = ['id']
+
+    def __str__(self):
+        return self.name
