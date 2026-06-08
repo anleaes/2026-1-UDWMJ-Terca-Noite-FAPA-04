@@ -1,0 +1,165 @@
+{% extends 'base.html' %} {% block body %}
+
+<br />
+<b>Detalhes do Leilão</b>
+<br />
+<br />
+
+<b>ID:</b> {{ auction.id }}
+<br />
+
+<b>Título:</b> {{ auction.title }}
+<br />
+
+<b>Descrição:</b> {{ auction.description }}
+<br />
+
+<b>Usuário:</b>
+{% if auction.user %} {{ auction.user.first_name }} {{ auction.user.last_name }}
+{% else %} Não informado {% endif %}
+<br />
+
+<b>Leiloeiro:</b>
+{% if auction.auctioneer %} {{ auction.auctioneer.first_name }} {{auction.auctioneer.last_name }} {% else %} Não informado {% endif %}
+<br />
+
+<b>Data de Início:</b>
+{{ auction.date_begin }}
+<br />
+
+<b>Data de Encerramento:</b>
+{{ auction.date_end }}
+<br />
+
+<b>Valor Inicial:</b>
+{{ auction.initial_value }}
+<br />
+
+<b>Status:</b>
+{{ auction.get_status_display }}
+<br />
+
+<b>Forma de pagamento:</b>
+
+{% if auction.payment_method %} {{ auction.get_payment_method_display }} {% else
+%} Não confirmada {% endif %}
+<br />
+
+<b>Recibo de Pagamento:</b>
+
+{% if auction.receipt %}
+<a
+  href="{% url 'receiptpayment:view_receipt' auction.receipt.id %}"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  {{ auction.receipt.number }}
+</a>
+
+- {{ auction.receipt.issue_date }} 
+{% else %} 
+
+Não gerada 
+
+{% endif %}
+
+<br />
+<br />
+
+<b>Itens do Leilão</b>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Item</th>
+      <th>Quantidade</th>
+      <th>Preço Unitário</th>
+      <th>Subtotal</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for item in items %}
+    <tr>
+      <td><img src="{{ item.item.photo.url }}" width="100" height="100" /></td>
+
+      <td>{% if item.item %} {{ item.item.name  }} {% endif %}</td>
+
+      <td>{{ item.quantity }}</td>
+
+      <td>{{ item.value }}</td>
+
+      <td>{{ item.sub_total }}</td>
+    </tr>
+
+    {% empty %}
+    <tr>
+      <td colspan="4">Nenhum item encontrado.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<br />
+
+<b>Lances Realizados</b>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Usuário</th>
+      <th>Item</th>
+      <th>Valor do Lance</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+    {% for bid in bids %}
+
+    <tr>
+        <td>
+            {% if bid.user %}
+                {{ bid.user.first_name|default:'' }} {{ bid.user.last_name|default:'' }}
+            {% else %}
+                Não informado
+            {% endif %}
+        </td>
+
+        <td>
+            {% if bid.auctionitem and bid.auctionitem.item %}
+                {{ bid.auctionitem.item.name|default:'Não informado' }}
+            {% else %}
+                Não informado
+            {% endif %}
+        </td>
+
+        <td>
+            {{ bid.value }}
+        </td>
+
+        <td>
+            {{ bid.get_status_display }}
+        </td>
+    </tr>
+
+    {% empty %}
+
+    <tr>
+        <td colspan="4">
+            Nenhum lance realizado.
+        </td>
+    </tr>
+
+    {% endfor %}
+
+</tbody>
+</table>
+
+<br />
+
+<a href="{% url 'auction:list_auctions' %}"> Voltar </a>
+
+{% endblock %}

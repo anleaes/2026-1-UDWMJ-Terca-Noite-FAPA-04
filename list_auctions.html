@@ -1,0 +1,69 @@
+
+{% extends 'base.html' %}
+
+{% block title %}
+Lista de Leilões - {{ block.super }}
+{% endblock title %}
+
+{% block body %}
+
+<div class="form-container">
+
+  <h2>Lista de Leilões</h2>
+
+  <a href="{% url 'auction:add_auction' %}">
+    Novo Leilão
+  </a>
+
+  <table class="table">
+
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Título</th>
+        <th>Data Início</th>
+        <th>Data Fim</th>
+        <th>Status</th>
+        <th>Leiloeiro</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      {% for auction in auctions %}
+      <tr>
+        <td>{{ auction.id }}</td>
+        <td>{{ auction.title }}</td>
+        <td>{{ auction.date_begin }}</td>
+        <td>{{ auction.date_end }}</td>
+        <td>{{ auction.status }}</td>
+        <td>{{ auction.auctioneer }}</td>
+
+        <td>
+          <a href="{% url 'auction:view_auctions' auction.id %}">
+            Ver
+          </a>
+
+          |
+          
+          <a href="{% url 'auction:cancel_auction' auction.id %}">
+            Cancelar
+          </a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="7">
+          Nenhum leilão encontrado
+        </td>
+      </tr>
+      {% endfor %}
+
+    </tbody>
+
+  </table>
+
+</div>
+
+{% endblock body %}

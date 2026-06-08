@@ -1,0 +1,65 @@
+{% extends 'base.html' %} {% block title %} Adicionar Leilão - {{ block.super }}
+{% endblock title %} {% block body %}
+
+<div class="form-container">
+  <h2>Cadastro de Leilão</h2>
+
+  <form action="" method="POST" class="form-card">
+    {% csrf_token %}
+
+    <div class="form-group">
+      <label>Título</label>
+      <input type="text" name="title" required />
+    </div>
+
+    <div class="form-group">
+      <label>Descrição</label>
+      <textarea name="description" required></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Data de Início</label>
+      <input type="datetime-local" name="date_begin" required />
+    </div>
+
+    <div class="form-group">
+      <label>Data de Fim</label>
+      <input type="datetime-local" name="date_end" required />
+    </div>
+
+    <div class="form-group">
+      <label>Itens do Leilão</label>
+
+      <select name="items" multiple required>
+        {% for item in items %}
+        <option value="{{ item.id }}">
+          {{ item.name }} - R$ {{ item.price }}
+        </option>
+        {% endfor %}
+      </select>
+
+      <small> Segure CTRL para selecionar vários itens </small>
+    </div>
+
+    <div class="form-group">
+      <label>Valor Inicial</label>
+      <input type="number" step="0.01" name="initial_value" required />
+    </div>
+
+    <div class="form-group">
+      <label>Leiloeiro</label>
+      <select name="auctioneer" required>
+        <option value="">Selecione</option>
+        {% for auctioneer in auctioneers %}
+        <option value="{{ auctioneer.id }}">
+          {{ auctioneer.first_name }} {{ auctioneer.last_name }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <button type="submit" class="btn">Salvar</button>
+  </form>
+</div>
+
+{% endblock body %}
