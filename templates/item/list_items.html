@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+
+{% extends 'base.html' %}
+
+{% block title %}
+
+    Lista de Itens - {{ block.super }}
+
+{% endblock title %}
+
+{% block body %}
+
+<h2>Lista de Itens</h2>
+
+<br />
+    <a class="btn" href="{% url 'item:add_item' %}">Novo Item</a>
+<br />
+<br />
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Descricao</th>
+            <th>Data de fabricacao</th>
+            <th>Ativo</th>
+            <th>Preço</th>
+            <th>Foto</th>
+            <th>Documento</th>
+            <th>Categoria</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in items %}
+            <tr>
+                <td>{{ item.id }}</th>
+                <td>{{ item.name }}</td>
+                <td>{{ item.description }}</td>
+                <td>{{ item.fabrication_date }}</td>
+                <td>
+                {% if item.is_active == True %}
+                    Ativo
+                {% endif %}
+                {% if item.is_active == False %}
+                    Inativo
+                {% endif %}
+                </td>
+                <td>{{ item.price }}</td>
+                <td>
+                <img src="{{ item.photo.url }}" width="50" height="50">
+                </td>
+                <td>
+                    <a href="{{ item.doc.url }}" >{{ item.doc.url }}</a>
+                </td>
+                <td>{{ item.category }}</td>
+                <td>
+                    <a class="btn btn-edit" 
+                    href="{% url 'item:edit_item' item.id %}">
+                    Editar
+                    </a>
+                </td>
+                <td>    
+                    <a class="btn btn-delete"
+                     href="{% url 'item:delete_item' item.id %}" 
+                     onclick="return confirmarExclusao();">
+                     Excluir
+                    </a>
+                </td>
+            </tr> 
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock body %}
+
+</html>  
