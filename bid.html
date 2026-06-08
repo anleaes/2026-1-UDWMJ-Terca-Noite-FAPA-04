@@ -1,0 +1,99 @@
+{% extends 'base.html' %} {% load static %} {% block body %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+<div class="bid-container">
+  <div class="bid-header">
+    <h2>Meus Lances</h2>
+    <div class="bid-actions">
+      <a class="secondary-btn" href="{% url 'auctionitem:list_auctionitems' %}"
+        >← Novos Lances</a
+      >
+      <button class="secondary-btn" onclick="cartUtils.printCart()">
+        🖨️ Imprimir
+      </button>
+    </div>
+  </div>
+
+  {% if bid %}
+  <div class="alert alert-info">
+    <strong>{{ bid|length }} item(ns)</strong> no seu carrinho
+  </div>
+
+  <table class="bid-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Produto</th>
+        <th>Preço Unit.</th>
+        <th>Quantidade</th>
+        <th>Subtotal</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item_id, item in bid.items %}
+      <tr data-item-id="{{ item_id }}">
+        <td>{{ item_id }}</td>
+        <td>{{ item.name }}</td>
+        <td>R$ {{ item.price|floatformat:2 }}</td>
+        <td>
+          <form
+            method="post"
+            action="{% url 'auctionitem:edit_bid' item_id %}"
+            class="item-quantity-form"
+          >
+            {% csrf_token %}
+            <input
+              type="number"
+              name="quantity"
+              class="item-quantity-input"
+              value="{{ item.quantity }}"
+              min="1"
+              max="999"
+            />
+            <button type="submit" class="update-btn">Atualizar</button>
+          </form>
+        </td>
+        <td class="subtotal">R$ {{ item.subtotal|floatformat:2 }}</td>
+        <td class="bid-actions-col">
+          <a
+            href="{% url 'auctionitem:delete_bid' item_id %}"
+            class="remove-btn"
+            data-item-name="{{ item.name }}"
+          >
+            Remover
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="bid-summary">
+    <div class="summary-row">
+      <span>Total de Lances:</span>
+      <strong>R$ {{ total|floatformat:2 }}</strong>
+    </div>
+  </div>
+
+  <div style="text-align: center">
+    <a
+      href="{% url 'auctionitem:checkout' %}"
+      class="primary-btn"
+      style="display: inline-block"
+    >
+      → Finalizar Lance
+    </a>
+  </div>
+  {% else %}
+  <div class="empty-message">
+    <p>🛒 Seus lances estão vazios</p>
+    <a href="{% url 'auctionitem:list_auctionitems' %}" class="secondary-btn">
+      Ver Itens Disponíveis
+    </a>
+  </div>
+  {% endif %}
+</div>
+
+<script src="{% static 'js/cart.js' %}"></script>
+{% endblock %}

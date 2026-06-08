@@ -1,0 +1,66 @@
+{% extends 'base.html' %} {% load static %} {% block body %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+<div class="bid-container">
+  <div class="bid-header">
+    <h2>Itens Disponíveis para Leilão</h2>
+    <div class="bid-actions">
+      <a class="secondary-btn" href="{% url 'auctionitem:bids' %}"
+        >Ver Lances</a
+      >
+    </div>
+  </div>
+
+  {% if auctionitems %}
+  <div class="alert alert-info">
+    Total: <strong>{{ auctionitems|length }} item(ns)</strong> disponível(eis)
+  </div>
+
+  <table class="bid-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Leilão</th>
+        <th>Item</th>
+        <th>Quantidade</th>
+        <th>Preço Unit.</th>
+        <th>Subtotal</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for auctionitem in auctionitems %}
+      <tr>
+        <td><small>#{{ auctionitem.id }}</small></td>
+        <td><strong>{{ auctionitem.auction.title }}</strong></td>
+        <td>{{ auctionitem.item.name }}</td>
+        <td>{{ auctionitem.quantity }}</td>
+        <td>R$ {{ auctionitem.value|floatformat:2 }}</td>
+        <td>R$ {{ auctionitem.sub_total|floatformat:2 }}</td>
+        <td class="bid-actions-col">
+          <a
+            class="primary-btn"
+            href="{% url 'auctionitem:add_bid' auctionitem.id %}"
+            style="background-color: #00b894"
+          >
+            Adicionar
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-message">
+    <p>Nenhum item disponível no momento</p>
+    <a href="/" class="secondary-btn">← Voltar</a>
+  </div>
+  {% endif %}
+
+  <div style="margin-top: 30px; text-align: center">
+    <a class="secondary-btn" href="/">← Página Inicial</a>
+  </div>
+</div>
+
+<script src="{% static 'js/main.js' %}"></script>
+{% endblock %}
