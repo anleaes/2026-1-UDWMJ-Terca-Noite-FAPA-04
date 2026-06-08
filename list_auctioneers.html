@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+
+{% extends 'base.html' %}
+
+{% block title %}
+
+    Lista de Leiloeiros - {{ block.super }}
+
+{% endblock title %}
+
+{% block body %}
+
+<h2>Lista de Leiloeiros</h2>
+
+<br />
+    <a class="btn"
+    href="{% url 'auctioneer:add_auctioneer' %}">
+    Cadastro de novo leiloeiro
+    </a>
+<br />
+<br />
+<table class="table">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Sobrenome</th>
+        <th>Empresa</th>
+        <th>Telefone</th>
+        <th>E-mail</th>
+        <th>Comissão</th>
+        <th>Cargo</th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for auctioneer in auctioneers %}
+        <tr>
+            <td>{{ auctioneer.id }}</td>
+            <td>{{ auctioneer.first_name }}</td>
+            <td>{{ auctioneer.last_name }}</td>
+            <td>{{ auctioneer.company }}</td>
+            <td>{{ auctioneer.cell_phone }}</td>
+            <td>{{ auctioneer.email }}</td>
+            <td>{{ auctioneer.commission }}</td>
+            <td>{{ auctioneer.position }}</td>
+            <td>
+                <a class="btn-edit"
+                href="{% url 'auctioneer:edit_auctioneer' auctioneer.id %}">
+                Editar
+                </a>
+            </td>
+            <td>
+                <a class="btn-delete"
+                href="{% url 'auctioneer:delete_auctioneer' auctioneer.id %}"
+                onclick="return confirmarExclusao();">
+                Excluir
+                </a>
+            </td>
+        </tr> 
+    {% endfor %}
+    </tbody>
+</table>
+
+
+{% endblock body %}
+
+</html>
