@@ -1,0 +1,37 @@
+from django.shortcuts import render, get_object_or_404
+from auctionbid.models import AuctionBid
+from .serializer import AuctionBidSerializer
+from rest_framework import viewsets
+
+
+def list_bids(request):
+    bids = AuctionBid.objects.select_related(
+        'user', 'auction', 'auctionitem'
+    ).all()
+    
+    context = {
+        'bids': bids
+    }
+    
+    return render(request, 'auctionbid/list_bids.html', context)
+
+
+def view_bid(request, bid_id):
+    bid = get_object_or_404(
+        AuctionBid.objects.select_related(
+            'user', 'auction', 'auctionitem'
+        ),
+        id=bid_id
+    )
+    
+    context = {
+        'bid': bid
+    }
+    
+    return render(request, 'auctionbid/view_bid.html', context)
+
+
+class AuctionBidViewSet(viewsets.ModelViewSet):
+    queryset = AuctionBid.objects.all()
+    serializer_class = AuctionBidSerializer
+

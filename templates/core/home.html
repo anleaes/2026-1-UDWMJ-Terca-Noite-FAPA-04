@@ -1,0 +1,120 @@
+{% extends 'base.html'%} {% block title %} {{ block.super }} {% endblock title%}
+{% block body %}
+
+<div class="form-card" style="max-width: 1100px; width: 100%; text-align: center">
+  <h2>Leilões Disponíveis</h2>
+
+  {% if auctions %}
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Foto</th>
+        <th>Leilão</th>
+        <th>Data</th>
+        <th>Ações</th>
+        <th>Lances</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for auction in auctions %}
+      <tr>
+        <td>
+          {% if auction.auction_items.all %} 
+          {% with first_item=auction.auction_items.all|first %}
+          {% if first_item.item.photo %}
+          <img
+            src="{{ first_item.item.photo.url }}"
+            alt="{{ first_item.item.name }}"
+            width="100"
+          />
+          {% else %}
+          <span style="color: #999">Sem imagem</span>
+          {% endif %}
+          {% endwith %} {% else %}
+          <span style="color: #999">Sem imagem</span>
+          {% endif %}
+        </td>
+        <td>{{ auction.title }}</td>
+        <td>{{ auction.date_begin|date:"d/m/Y" }}</td>
+        <td>
+          <a
+            href="{% url 'auction:view_auctions' auction.id %}"
+            class="primary-btn"
+          >
+            Visualizar
+          </a>
+        </td>
+        <td>
+          {% with first_item=auction.auction_items.all|first %}
+          {% if first_item %}
+          <a href="{% url 'auctionitem:add_bid' first_item.id %}">
+            <button class="btn">Dar Lance</button>
+          </a>
+          {% endif %}
+          {% endwith %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% else %}
+
+  <div class="empty-message">
+    <p>Nenhum leilão disponível.</p>
+  </div>
+
+  {% endif %}
+</div>
+
+<br />
+
+<div class="form-card" style="max-width: 1100px; width: 100%; text-align: center">
+  <h2>Itens Disponíveis</h2>
+
+  {% if items %}
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Nome</th>
+        <th>Categoria</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for item in items %}
+      <tr>
+        <td>
+          {% if item.photo %}
+          <img src="{{ item.photo.url }}" alt="{{ item.name }}" width="100" />
+          {% else %}
+          <span style="color: #999">Sem imagem</span>
+          {% endif %}
+        </td>
+        <td>{{ item.name }}</td>
+        <td>{{ item.category.name }}</td>
+        <td>
+          <a href="{% url 'item:list_items' %}" class="primary-btn">
+            Visualizar
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% else %}
+
+  <div class="empty-message">
+    <p>Nenhum item disponível.</p>
+  </div>
+
+  {% endif %}
+</div>
+
+{% endblock body %}

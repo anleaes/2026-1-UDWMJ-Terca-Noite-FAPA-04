@@ -1,0 +1,68 @@
+{% extends 'base.html' %} 
+
+{% block title %} Adicionar Leiloeiro - {{ block.super }}
+
+{% endblock title %}
+
+{% block body %}
+
+<div class="page-container">
+  <div class="form-container">
+    <div class="form-card">
+      <h2>Cadastro de Leiloeiro</h2>
+
+      <form action="" method="POST">
+        {% csrf_token %}
+
+        <div class="form-group">
+          <label>Nome</label>
+          {{ form.first_name }}
+        </div>
+
+        <div class="form-group">
+          <label>Sobrenome</label>
+          {{ form.last_name }}
+        </div>
+
+        <div class="form-group">
+          <label>Empresa</label>
+          {{ form.company }}
+        </div>
+
+        <div class="form-group">
+          <label>Avaliação</label>
+          {{ form.evaluation }}
+        </div>
+
+        <div class="form-group">
+          <label>E-mail</label>
+          {{ form.email}}
+        </div>
+
+        <div class="form-group">
+          <label>Senha</label>
+          {{ form.password }}
+        </div>
+
+        <div class="form-group">
+          <label>Comissão</label>
+          {{ form.commission}}
+        </div>
+
+        <button type="submit" class="btn">Salvar</button>
+
+        {% if request.session.auth %} {% if request.session.auth.role == 'auctioneer' %}
+        
+        <a href="{% url 'auctioneer:delete_auctioneer' request.session.auth.id %}" 
+        class="btn btn-delete" 
+        onclick="return confirmarExclusao();"> Deletar </a>
+
+        <a href="{% url 'auctioneer:view_auctioneer' request.session.auth.id %}" class="secondary-btn"> Voltar </a>
+
+        {% endif %} {% endif %}
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock body %}

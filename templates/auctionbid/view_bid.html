@@ -1,0 +1,42 @@
+{% extends 'base.html' %} {% block body %}
+<div class="page-container">
+  <div class="form-card">
+    <h2>Detalhes do Lance</h2>
+
+    <table class="table">
+      <tbody>
+        <tr>
+          <th>ID</th>
+          <td>{{ bid.id }}</td>
+        </tr>
+        <tr>
+          <th>Usuário</th>
+          <td>{{ bid.user.first_name }} {{ bid.user.last_name }}</td>
+        </tr>
+        <tr>
+          <th>Leilão</th>
+          <td>{{ bid.auction.title }}</td>
+        </tr>
+        <tr>
+          <th>Item</th>
+          <td>{{ bid.auctionitem.item.name }}</td>
+        </tr>
+        <tr>
+          <th>Valor</th>
+          <td>R$ {{ bid.value|floatformat:2 }}</td>
+        </tr>
+        <tr>
+          <th>Status</th>
+          <td>{{ bid.get_status_display }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="margin-top: 20px; text-align: center">
+      <a href="{% url 'auctionbid:list_bids' %}" class="secondary-btn"
+        >Voltar</a
+      >
+    </div>
+  </div>
+</div>
+{% endblock %}

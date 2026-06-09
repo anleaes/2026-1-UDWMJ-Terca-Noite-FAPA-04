@@ -1,0 +1,57 @@
+{% extends 'base.html' %} {% block title %} Lista de Pagamentos - {{ block.super
+}} {% endblock %} {% block body %}
+
+<div class="page-container">
+  <h2>Métodos de Pagamento</h2>
+
+  <div style="margin-bottom: 20px">
+    <a class="btn" href="{% url 'payment:add_payment' %}">Novo Método</a>
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>#</th>
+        <th>Nome</th>
+        <th>Tipo</th>
+        <th>Descrição</th>
+        <th>Status</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for payment in payments %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ payment.id }}</td>
+        <td>{{ payment.name }}</td>
+        <td>{{ payment.payment_method }}</td>
+        <td>{{ payment.description }}</td>
+        <td>{% if payment.is_active %}Ativo{% else %}Inativo{% endif %}</td>
+        <td>
+          <a class="btn-edit" href="{% url 'payment:edit_payment' payment.id %}"
+            >Editar</a
+          >
+        </td>
+        <td>
+          <a
+            class="btn-delete"
+            href="{% url 'payment:delete_payment' payment.id %}"
+            onclick="return confirmarExclusao();"
+            >Excluir</a
+          >
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="7">Nenhum método de pagamento cadastrado.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% endblock %}
+</div>

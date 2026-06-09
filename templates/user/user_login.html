@@ -1,0 +1,56 @@
+{% extends 'base.html' %} {% block title %} Login Usuário {% endblock title %}
+{% block body %}
+
+<div class="page-container">
+  <div class="form-container">
+    <div class="form-card">
+      <h2 style="text-align: center">Login do Usuário</h2>
+
+      <p style="text-align: center; margin-bottom: 30px">
+        Entre com suas credenciais para acessar sua conta
+      </p>
+
+      {% if error %}
+      <div class="alert alert-danger">{{ error }}</div>
+      {% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+
+        <div class="form-group">
+          <label for="email"> Email </label>
+
+          <input
+            type="email"
+            name="email"
+            id="email"
+            placeholder="Digite seu email"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="password"> Senha </label>
+
+          <input
+            type="password"
+            name="password"
+            id="password"
+            placeholder="Digite sua senha"
+            required
+          />
+        </div>
+
+        <div class="checkout-actions">
+          <button type="submit" class="primary-btn">Entrar</button>
+
+          <a href="{% url 'user:add_user' %}" class="secondary-btn"
+            >Cadastrar</a
+          >
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock body %}

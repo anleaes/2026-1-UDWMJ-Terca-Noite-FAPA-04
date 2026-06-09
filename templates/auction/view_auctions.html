@@ -1,0 +1,210 @@
+{% extends 'base.html' %} {% block body %}
+
+<div class="page-container">
+  <div class="form-card" style="max-width: 1100px; width: 100%; text-align: center">
+    <h2>Detalhes do Leilão</h2>
+
+    <table class="table">
+      <tbody>
+        <tr>
+          <th>ID</th>
+          <td>{{ auction.id }}</td>
+        </tr>
+        <tr>
+          <th>Título</th>
+          <td>{{ auction.title }}</td>
+        </tr>
+        <tr>
+          <th>Descrição</th>
+          <td>{{ auction.description }}</td>
+        </tr>
+        <tr>
+          <th>Usuário</th>
+          <td>
+            {% if winner_user %}
+              {{ winner_user.first_name }} {{ winner_user.last_name }}
+            {% else %}Não informado{% endif %}
+          </td>
+        </tr>
+        <tr>
+          <th>Leiloeiro</th>
+          <td>
+            {% if auction.auctioneer %}{{ auction.auctioneer.first_name }} {{ auction.auctioneer.last_name }}{% else %}Não informado{% endif %}
+          </td>
+        </tr>
+        <tr>
+          <th>Data de Início</th>
+          <td>{{ auction.date_begin }}</td>
+        </tr>
+        <tr>
+          <th>Data de Encerramento</th>
+          <td>{{ auction.date_end }}</td>
+        </tr>
+        <tr>
+          <th>Valor Inicial</th>
+          <td>{{ auction.initial_value }}</td>
+        </tr>
+        <tr>
+          <th>Status</th>
+          <td>{{ auction.get_status_display }}</td>
+        </tr>
+        <tr>
+          <th>Forma de pagamento</th>
+          <td>
+            {% if selected_payment %}
+              {{ selected_payment.name }} - {{ selected_payment.get_payment_method_display }}
+            {% else %}Não confirmada{% endif %}
+          </td>
+        </tr>
+        <tr>
+          <th>Recibo de Pagamento</th>
+          <td>
+            {% if receipt %}<a
+              href="{% url 'receiptpayment:view_receipt' receipt.id %}"
+              target="_blank"
+              rel="noopener noreferrer"
+              >{{ receipt.number }}</a
+            >
+            - {{ receipt.issue_date }}
+            {% else %}Não gerada{% endif %}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+  </br>
+
+    <h2>Itens do Leilão</h2>
+    <table class="table">
+      <thead>
+        <tr>
+            <th></th>
+            <th>Item</th>
+            <th>Quantidade</th>
+            <th>Preço</th>
+            <th>Subtotal</th>
+            <th>Ações</th>
+        </tr>
+        </thead>
+        
+        <tbody>
+        {% for auction_item in auction_items %}
+        <tr>
+            <td>
+                {% if auction_item.item.photo %}
+                <img src="{{ auction_item.item.photo.url }}" width="100" height="100">
+                {% else %}
+                <span>Sem imagem</span>
+                {% endif %}
+            </td>
+        
+            <td>{{ auction_item.item.name }}</td>
+        
+            <td>{{ auction_item.quantity }}</td>
+        
+            <td>{{ auction_item.value }}</td>
+        
+            <td>{{ auction_item.sub_total }}</td>
+        
+            <td>
+                {% if can_bid %}
+                    <a href="{% url 'auctionitem:add_bid' auction_item.id %}"
+                       class="btn btn-primary">
+                       Dar Lance
+                    </a>
+                {% elif not request.session.auth %}
+                    <a href="{% url 'user:login' %}" class="btn btn-primary">
+                       Login para dar lance
+                    </a>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6">Nenhum item encontrado.</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div style="margin: 30px 0 20px; border-top: 1px solid #e2e8f0"></div>
+
+    <h2>Lances Realizados</h2>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Usuário</th>
+          <th>Item</th>
+          <th>Valor do Lance</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for bid in bids %}
+
+        <tr>
+          <td>
+            {% if bid.user %} {{ bid.user.first_name|default:'' }} 
+            {{ bid.user.last_name|default:'' }} 
+            
+            {% else %} 
+            
+            Não informado 
+            
+            {% endif %}
+          </td>
+
+          <td>
+            {% if bid.auctionitem and bid.auctionitem.item %} 
+
+            {{ bid.auctionitem.item.name|default:'Não informado' }} 
+            
+            {% else %} 
+            
+            Não informado 
+            
+            {% endif %}
+          </td>
+
+          <td>R$ {{ bid.value }}</td>
+
+          <td>{{ bid.get_status_display }}</td>
+        </tr>
+
+        {% empty %}
+
+        <tr>
+          <td colspan="4">Nenhum lance realizado.</td>
+        </tr>
+
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </br>
+  </br>
+
+      <a href="{% url 'auction:list_auctions' %}" class="secondary-btn">Todas os Leilões</a>
+
+      {% if request.session.auth %} {% if request.session.auth.role == 'auctioneer' %}
+        
+        <a href="{% url 'auction:delete_auction' auction.id %}" 
+        class="btn btn-delete" 
+        onclick="return confirmarExclusao();"> Excluir Leilão </a>
+
+        <a href="{% url 'auctioneer:view_auctioneer' request.session.auth.id %}" class="secondary-btn"> Voltar </a>
+
+        {% endif %} {% endif %}
+
+        {% if request.session.auth %} {% if request.session.auth.role == 'user' %}
+
+        <a href="{% url 'user:view_user' request.session.auth.id %}" class="secondary-btn"> Voltar </a>
+
+        {% endif %} {% endif %}
+
+    {% endblock %}
+  </div>
+</div>

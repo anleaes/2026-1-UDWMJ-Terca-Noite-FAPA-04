@@ -1,0 +1,61 @@
+{% load static %}
+
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}SISTEMA LEILÃO{% endblock title %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  </head>
+  
+  <body>
+    {% block header %}
+
+    <header class="topbar">
+      <nav>
+        <a href="{% url 'core:home' %}">Home</a>
+        <a href="{% url 'category:list_categories' %}">Categorias</a>
+        <a href="{% url 'item:list_items' %}">Itens</a>
+        <a href="{% url 'contactchannel:list_contactchannels' %}">Canais de Contato</a>
+        <a href="{% url 'user:list_users' %}">Usuários</a>
+        <a href="{% url 'auctioneer:list_auctioneers' %}">Leiloeiros</a>
+        <a href="{% url 'auction:list_auctions' %}">Leilões</a>
+      </nav>
+      <nav>
+        {% if request.session.auth %} {% if request.session.auth.role == 'user' %}
+        <a href="{% url 'user:view_user' request.session.auth.id %}">
+          <button class="btn">Meu Perfil</button>
+        </a>
+        {% elif request.session.auth.role == 'auctioneer' %}
+        <a href="{% url 'auctioneer:view_auctioneer' request.session.auth.id %}">
+          <button class="btn">Meu Perfil</button>
+        </a>
+        {% endif %}
+        <a href="{% url 'user:logout' %}">
+          <button class="secondary-btn">Sair</button>
+        </a>
+        {% else %}
+        <a href="{% url 'user:login' %}">Login Usuário</a>
+        <a href="{% url 'auctioneer:login' %}">Login Leiloeiro</a>
+        {% endif %}
+      </nav>
+    </header>
+    {% endblock header %}
+
+  </br>
+  
+    <main class="container page-container">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+
+      {% block body %} 
+
+      {% endblock body %}
+    </main>
+
+    <script src="{% static 'js/main.js' %}"></script>
+  </body>
+</html>

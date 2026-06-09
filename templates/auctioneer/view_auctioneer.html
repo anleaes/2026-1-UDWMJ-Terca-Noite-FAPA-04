@@ -1,0 +1,175 @@
+{% extends 'base.html' %} {% block body %}
+
+<div class="page-container">
+  <div
+    class="form-card"
+    style="max-width: 3000px; width: 110%; text-align: center; margin-left: -55px"
+  >
+    <h2>Perfil do Leiloeiro</h2>
+
+    <div style="margin-bottom: 20px">
+      <a class="btn" href="{% url 'auctioneer:edit_auctioneer' auctioneer.id %}"
+        >Editar Perfil</a>
+        <a class="btn" href="{% url 'item:add_item' %}">Cadastrar Item</a>
+  
+        <a class="btn" href="{% url 'category:add_category' %}">Cadastrar Categoria</a>
+    
+        <a class="btn" href="{% url 'auctioneer:add_auctioneer' %}">Cadastrar Leiloeiro</a>
+    
+        <a class="btn" href="{% url 'contactchannel:add_contactchannel' %}">Cadastrar Canais de Contato</a>
+
+      <a class="btn" href="{% url 'auction:add_auction' %}">Cadastrar Leilões</a>
+    </div>
+  </br>
+
+    <table class="table">
+      <tbody>
+        <tr>
+          <th>Nome</th>
+          <td>{{ auctioneer.first_name }} {{ auctioneer.last_name }}</td>
+        </tr>
+
+        <tr>
+          <th>Empresa</th>
+          <td>{{ auctioneer.company }}</td>
+        </tr>
+
+        <tr>
+          <th>Avaliação</th>
+          <td>{{ auctioneer.evaluation }}</td>
+        </tr>
+
+        <tr>
+          <th>Comissão</th>
+          <td>{{ auctioneer.commission }}</td>
+        </tr>
+
+        <tr>
+          <th>Status</th>
+          <td>{% if auctioneer.status %}Ativo{% else %}Inativo{% endif %}</td>
+        </tr>
+
+        <tr>
+          <th>Email</th>
+          <td>{{ auctioneer.email }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    </br>
+    </br>
+
+
+    <h2>Leilões Gerenciados</h2>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Foto</th>
+          <th>Título</th>
+          <th>Status</th>
+          <th>Início</th>
+          <th>Fim</th>
+          <th>Ação</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for auction in auctions %}
+        <tr>
+          <td>
+            {% with first_item=auction.auction_items.all|first %} {% if first_item %}
+            <img
+              src="{{ first_item.item.photo.url }}"
+              alt="{{ first_item.item.name }}"
+              width="100"
+            />
+            {% else %}
+            <span style="color: #999">Sem imagem</span>
+            {% endif %} {% endwith %}
+          </td>
+          <td>{{ auction.title }}</td>
+          <td>{{ auction.get_status_display }}</td>
+          <td>{{ auction.date_begin }}</td>
+          <td>{{ auction.date_end }}</td>
+          <td>
+            <a href="{% url 'auction:view_auctions' auction.id %}" class="primary-btn">Ver Leilão</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6">Nenhum leilão gerenciado.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% if selected_auction %}
+
+    <br />
+    <hr />
+    <br />
+
+    <h2>Leilão Selecionado</h2>
+
+    <table class="table">
+      <tbody>
+        <tr>
+          <th>Título</th>
+          <td>{{ selected_auction.title }}</td>
+        </tr>
+        <tr>
+          <th>Descrição</th>
+          <td>{{ selected_auction.description }}</td>
+        </tr>
+        <tr>
+          <th>Data de Início</th>
+          <td>{{ selected_auction.date_begin }}</td>
+        </tr>
+        <tr>
+          <th>Data Final</th>
+          <td>{{ selected_auction.date_end }}</td>
+        </tr>
+        <tr>
+          <th>Status</th>
+          <td>{{ selected_auction.get_status_display }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <br />
+
+    <h2>Itens do Leilão</h2>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Valor Base</th>
+          <th>Quantidade</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for auction_item in selected_auction.auction_items.all %}
+        <tr>
+          <td>{{ auction_item.item.name }}</td>
+          <td>R$ {{ auction_item.value }}</td>
+          <td>{{ auction_item.quantity }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="3">Nenhum item encontrado.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% endif %}
+
+    <br />
+    <a href="{% url 'auctioneer:list_auctioneers' %}" class="secondary-btn"
+      >Voltar</a
+    >
+  </div>
+</div>
+
+{% endblock %}
