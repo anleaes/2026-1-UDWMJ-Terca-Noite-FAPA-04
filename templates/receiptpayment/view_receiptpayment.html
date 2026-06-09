@@ -1,0 +1,100 @@
+{% extends 'base.html' %} 
+
+{% block title %} Recibo de Pagamento {% endblock title %} 
+
+{% block header %} {% endblock %} 
+
+{% block body %}
+
+<div class="page-container" style="margin-top: -80px">
+  <div class="receipt_container form-card">
+    <h2>RECIBO DE PAGAMENTO</h2>
+
+    <div class="bid-summary">
+      <div class="summary-row">
+        <span><strong>Leilão:</strong></span>
+        <span>{{ auction.title }}</span>
+      </div>
+
+      <div class="summary-row">
+        <span><strong>Leiloeiro:</strong></span>
+        <span>
+          {{ auction.auctioneer.first_name }} {{ auction.auctioneer.last_name }}
+        </span>
+      </div>
+
+      <div class="summary-row">
+        <span><strong>Data de Encerramento:</strong></span>
+        <span>{{ auction.date_end|date:"d/m/Y H:i" }}</span>
+      </div>
+
+      <div class="summary-row">
+        <span><strong>Status:</strong></span>
+        <span>{{ auction.get_status_display }}</span>
+      </div>
+    </div>
+
+    <br />
+
+    <h3>Itens Arrematados</h3>
+
+    <table class="receipt_table">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Categoria</th>
+          <th>Quantidade</th>
+          <th>Valor Final</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for auction_item in auction.auction_items.all %}
+
+        <tr>
+          <td>{{ auction_item.item.name }}</td>
+
+          <td>{{ auction_item.item.category.name }}</td>
+
+          <td>{{ auction_item.quantity }}</td>
+
+          <td>R$ {{ auction_item.value }}</td>
+        </tr>
+
+        {% empty %}
+
+        <tr>
+          <td colspan="4">Nenhum item encontrado.</td>
+        </tr>
+
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <br />
+
+    <div class="bid-summary">
+      <div class="summary-row total">
+        <span>Total Pago</span>
+        <span>R$ {{ total }}</span>
+      </div>
+    </div>
+
+    <br />
+
+    <div style="text-align: center">
+      {% if auction.payment and auction.payment.user %}
+      <a
+        href="{% url 'user:view_user' auction.payment.user.id %}"
+        class="secondary-btn"
+      >
+        Voltar
+      </a>
+      {% else %}
+      <a href="{% url 'core:home' %}" class="secondary-btn"> Voltar </a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock body %}

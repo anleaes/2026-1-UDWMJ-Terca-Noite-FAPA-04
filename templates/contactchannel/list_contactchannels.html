@@ -1,0 +1,54 @@
+{% extends 'base.html' %} {% block title %} Lista de Canais de Contato - {{
+block.super }} {% endblock title %} {% block body %}
+
+<div class="page-container">
+  <h2>Lista de Canais de Contato</h2>
+
+  <div style="margin-bottom: 20px">
+    <a class="btn" href="{% url 'contactchannel:add_contactchannel' %}"
+      >Cadastro de novo canal de contato</a
+    >
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Tipo de conteudo</th>
+        <th>Contato Preferêncial</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for contactchannel in contactchannel %}
+      <tr>
+        <th>{{ contactchannel.id }}</th>
+        <td>{{ contactchannel.name }}</td>
+        <td>{{ contactchannel.content_type }}</td>
+        <td>{{ contactchannel.url }}</td>
+        <td>
+          <a
+            class="btn-edit"
+            href="{% url 'contactchannel:edit_contactchannel' contactchannel.id %}"
+          >
+            Editar
+          </a>
+        </td>
+        <td>
+          <a
+            class="btn-delete"
+            href="{% url 'contactchannel:delete_contactchannel' contactchannel.id %}"
+            onclick="return confirmarExclusao();"
+          >
+            Excluir
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% endblock body %}
+</div>

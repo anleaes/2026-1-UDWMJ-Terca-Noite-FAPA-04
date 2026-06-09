@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<div class="page-container">
+  <div class="receipt_container">
+
+    <h2>Finalizar Pedido</h2>
+
+    {% if bid %}
+
+    <div class="alert alert-warning">
+      Você está finalizando a compra de
+      <strong>{{ bid|length }} item(ns)</strong>
+    </div>
+
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="bid-summary">
+
+        <div class="summary-row">
+          <span><strong>Usuário:</strong></span>
+          <span>
+            {{ current_user.first_name }}
+            {{ current_user.last_name }}
+          </span>
+        </div>
+
+        <div class="summary-row">
+          <span><strong>Leiloeiro:</strong></span>
+          <span>
+            {{ auction.auctioneer.first_name }}
+            {{ auction.auctioneer.last_name }}
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="payment_id">
+              Forma de Pagamento
+          </label>
+
+    <select
+        id="payment_id"
+        name="payment_id"
+        required
+    >
+        <option value="">
+            Selecione uma forma de pagamento
+        </option>
+
+        {% for payment in payments %}
+        <option value="{{ payment.id }}">
+            {{ payment.name }}
+        </option>
+        {% endfor %}
+    </select>
+
+    <a href="{% url 'payment:add_payment' %}" class="primary-btn">
+        Cadastrar Forma de Pagamento
+    </a>
+
+</div>
+
+      </div>
+
+      <h3>Resumo do Pedido</h3>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Produto</th>
+            <th>Preço Unitário</th>
+            <th>Quantidade</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for item_id, item in bid.items %}
+          <tr>
+            <td>{{ item.name }}</td>
+            <td>R$ {{ item.price|floatformat:2 }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>
+              R$ {{ item.subtotal|floatformat:2 }}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <div class="bid-summary">
+        <div class="summary-row total">
+          <span>Total do Pedido:</span>
+          <strong>
+            R$ {{ total|floatformat:2 }}
+          </strong>
+        </div>
+      </div>
+
+      <div class="checkout-actions">
+        <button
+          type="submit"
+          class="primary-btn"
+        >
+          Confirmar Pedido
+        </button>
+
+        <a
+          href="{% url 'auctionitem:bids' %}"
+          class="secondary-btn"
+        >
+          Voltar aos Lances
+        </a>
+      </div>
+
+    </form>
+
+    {% else %}
+
+    <div class="empty-message">
+      <p>Você não tem lances para finalizar.</p>
+
+      <a
+        href="{% url 'auctionitem:list_auctionitems' %}"
+        class="secondary-btn"
+      >
+        Ver Itens do Leilão
+      </a>
+    </div>
+
+    {% endif %}
+
+  </div>
+</div>
+
+{% endblock %}

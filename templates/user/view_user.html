@@ -1,0 +1,98 @@
+{% extends 'base.html' %} 
+
+{% block body %}
+
+<div class="page-container">
+  <div class="form-card" style="max-width: 1100px; width: 100%; text-align: center">
+
+    <h2>Meu Perfil</h2>
+    </br>
+      <a class="btn" href="{% url 'user:edit_user' user.id %}">Editar Perfil</a>
+      <a class="btn" href="{% url 'auctionitem:bids' %}"> Lances</a>
+      <a class="btn" href="{% url 'payment:add_payment' %}">Adicionar Método de Pagamento</a>
+    </br>
+
+    </br>
+    </br>
+
+    <table class="table">
+
+      <tbody>
+        <tr>
+          <th>Nome</th>
+          <td>{{ user.first_name }} {{ user.last_name }}</td>
+        </tr>
+
+        <tr>
+          <th>Saldo</th>
+          <td>R$ {{ user.balance }}</td>
+        </tr>
+
+        <tr>
+          <th>Reputação</th>
+          <td>{{ user.reputation }}</td>
+        </tr>
+
+        <tr>
+          <th>Gênero</th>
+          <td>{{ user.get_gender_display }}</td>
+        </tr>
+
+        <tr>
+          <th>Método de Pagamento</th>
+          <td>{{ user.payments.first.name }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <br />
+
+    <h2>Meus Lances</h2>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Leilão</th>
+          <th>Item</th>
+          <th>Valor do Lance</th>
+          <th>Status</th>
+          <th>Ação</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for bid in bids %}
+        <tr>
+          <td>{{ bid.id }}</td>
+
+          <td>{{ bid.auctionitem.auction.title }}</td>
+
+          <td>{{ bid.auctionitem.item.name }}</td>
+
+          <td>R$ {{ bid.value }}</td>
+
+          <td>{{ bid.get_status_display }}</td>
+
+          <td>
+            <a href="{% url 'auction:view_auctions' bid.auction.id %}" class="btn">
+              Ver Lance
+            </a>
+          </td>
+        </tr>
+
+        {% empty %}
+        <tr>
+          <td colspan="6">Nenhum lance realizado.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <br />
+
+    <a href="{% url 'user:list_users' %}" class="secondary-btn"> Voltar </a>
+  </div>
+</div>
+
+{% endblock %}

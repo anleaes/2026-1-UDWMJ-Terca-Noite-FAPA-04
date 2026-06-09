@@ -1,0 +1,48 @@
+{% extends 'base.html' %} {% block body %}
+<div class="page-container">
+  <div class="form-card">
+    <h2>Todos os Lances</h2>
+
+    {% if bids %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Usuário</th>
+          <th>Leilão</th>
+          <th>Item</th>
+          <th>Valor</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for bid in bids %}
+        <tr>
+          <td>{{ bid.id }}</td>
+          <td>{{ bid.user.first_name }} {{ bid.user.last_name }}</td>
+          <td>{{ bid.auction.title }}</td>
+          <td>{{ bid.auctionitem.item.name }}</td>
+          <td>R$ {{ bid.value|floatformat:2 }}</td>
+          <td>{{ bid.get_status_display }}</td>
+          <td>
+            <a href="{% url 'auctionbid:view_bid' bid.id %}" class="btn">Ver</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-message">
+      <p>Nenhum lance encontrado.</p>
+    </div>
+    {% endif %}
+
+    <div style="margin-top: 20px; text-align: center">
+      <a href="{% url 'auctionitem:bids' %}" class="secondary-btn"
+        >Ver Meu Carrinho</a
+      >
+    </div>
+  </div>
+</div>
+{% endblock %}
