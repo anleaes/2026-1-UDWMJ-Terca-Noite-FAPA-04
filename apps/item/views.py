@@ -1,5 +1,4 @@
 from django.shortcuts import render, get_object_or_404, redirect
-
 from .forms import ItemForm
 from .models import Item
 
@@ -13,7 +12,8 @@ def add_item(request):
             f.save()
             form.save_m2m()
             return redirect('item:list_items')
-    form = ItemForm()
+    else:
+        form = ItemForm()
     context['form'] = form
     return render(request, template_name, context)
 
@@ -23,7 +23,7 @@ def list_items(request):
     context = {
         'items': items
     }
-    return render(request, template_name, context) 
+    return render(request, template_name, context)
 
 def edit_item(request, id_item):
     template_name = 'item/add_item.html'
@@ -34,11 +34,12 @@ def edit_item(request, id_item):
         if form.is_valid():
             form.save()
             return redirect('item:list_items')
-    form = ItemForm(instance=item)
+    else:
+        form = ItemForm(instance=item)
     context['form'] = form
     return render(request, template_name, context)
 
 def delete_item(request, id_item):
-    item = Item.objects.get(id=id_item)
+    item = get_object_or_404(Item, id=id_item)
     item.delete()
     return redirect('item:list_items')
