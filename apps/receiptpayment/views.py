@@ -17,3 +17,22 @@ def create_receipt_for_auction(source):
         payment=source if hasattr(source, 'auction') else None
     )
 
+def view_receipt(request, receipt_id):
+    template_name = 'receiptpayment/view_receiptpayment.html'
+    receipt = get_object_or_404(Receipt, id=receipt_id)
+    total = (
+        receipt.payment.total
+        if receipt.payment
+        else sum(
+            auction_item.value * auction_item.quantity
+            for auction_item in receipt.auction.auction_items.all()
+        )
+    )
+
+    context = {
+        'receipt': receipt,
+        'auction': receipt.auction,
+        'items': receipt.auction.auction_items.all(),
+        'total': total
+    }
+    return render(request, template_name, context)
