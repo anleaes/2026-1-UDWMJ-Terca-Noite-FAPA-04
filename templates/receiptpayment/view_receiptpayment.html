@@ -72,3 +72,29 @@
     </table>
 
     <br />
+
+    <div class="bid-summary">
+      <div class="summary-row total">
+        <span>Total Pago</span>
+        <span>R$ {{ total }}</span>
+      </div>
+    </div>
+
+    <br />
+
+    <div style="text-align: center">
+      {% if auction.payment and auction.payment.user %}
+      <a
+        href="{% url 'user:view_user' auction.payment.user.id %}"
+        class="secondary-btn"
+      >
+        Voltar
+      </a>
+      {% else %}
+      <a href="{% url 'core:home' %}" class="secondary-btn"> Voltar </a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock body %}
