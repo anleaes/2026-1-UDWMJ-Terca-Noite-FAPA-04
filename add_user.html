@@ -1,0 +1,58 @@
+{% extends 'base.html' %} {% block title %} Adicionar Usuário - {{ block.super
+}} {% endblock title %} {% block body %}
+
+<div class="page-container">
+  <div class="form-container">
+    <div class="form-card">
+      <h2>Cadastro de Usuário</h2>
+
+      <form action="" method="POST">
+        {% csrf_token %}
+
+        <div class="form-group">
+          <label>Nome</label>
+          {{ form.first_name }}
+        </div>
+
+        <div class="form-group">
+          <label>Sobrenome</label>
+          {{ form.last_name }}
+        </div>
+
+        <div class="form-group">
+          <label>E-mail</label>
+          {{ form.email}}
+        </div>
+
+        <div class="form-group">
+          <label>Senha</label>
+          {{ form.password }}
+        </div>
+
+        <div class="form-group">
+          <label>Gênero</label>
+          {{ form.gender }}
+        </div>
+
+        <div class="form-group">
+          <label>Canais de Contato</label>
+          {{ form.contactchannel }}
+        </div>
+
+        <button type="submit" class="btn">Salvar</button>
+
+        {% if request.session.auth %} {% if request.session.auth.role == 'user' %}
+        <a href="{% url 'user:delete_user' request.session.auth.id %}" 
+        class="btn btn-delete" 
+        onclick="return confirmarExclusao();"> Deletar </a>
+
+        <a href="{% url 'user:view_user' request.session.auth.id %}" class="secondary-btn"> Voltar </a>
+
+        {% endif %} {% endif %}
+
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock body %}
